@@ -9,10 +9,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.24",
+    "ai": "^3.1.30",
     "next": "14.2.3",
+    "open-next": "^3.0.2",
     "react": "^18",
     "react-dom": "^18",
-    "sst": "ion"
+    "sst": "ion",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
