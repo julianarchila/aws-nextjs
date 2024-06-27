@@ -13,12 +13,18 @@ import { convertToBaseMessage, nanoid } from "@/lib/utils";
 import { graph } from "./agent";
 import { ChatGenerationChunk } from "@langchain/core/outputs";
 import { AIMessageChunk, HumanMessage } from "@langchain/core/messages";
+import { getConvertedChat } from "@/controllers/chat";
 
 // eslint-disable-next-line
 async function submitUserMessage(content: string): Promise<UIState[number]> {
   "use server";
 
   const aiState = getMutableAIState<typeof AI>();
+  const config = {
+    configurable: {
+      id: aiState.get().chatId,
+    },
+  };
 
   // get chat history from a redis store
 
@@ -36,13 +42,12 @@ async function submitUserMessage(content: string): Promise<UIState[number]> {
 
   console.log("chatId", aiState.get().chatId);
 
+  const saved_chat = await getConvertedChat(config.configurable.id);
+
+  const messages = saved_chat?.messages ?? [];
+
   const inputs = {
-    messages: convertToBaseMessage(aiState.get().messages),
-  };
-  const config = {
-    configurable: {
-      id: aiState.get().chatId,
-    },
+    messages: [...messages, new HumanMessage(content)],
   };
 
   void (async () => {
