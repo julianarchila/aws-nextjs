@@ -22,8 +22,17 @@ export default $config({
     };
     const allSecrets = Object.values(secrets);
 
-    new sst.aws.Nextjs("MyWeb", {
-      link: [...allSecrets],
-    });
+    new sst.aws.Nextjs(
+      "MyWeb",
+      {
+        link: [...allSecrets],
+        transform: {
+          server: (args) => {
+            args.timeout = "30 second";
+          },
+        },
+      },
+      {},
+    );
   },
 });
