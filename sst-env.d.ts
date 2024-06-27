@@ -11,6 +11,14 @@ declare module "sst" {
       type: "sst.sst.Secret"
       value: string
     }
+    RedisKey: {
+      type: "sst.sst.Secret"
+      value: string
+    }
+    RedisUrl: {
+      type: "sst.sst.Secret"
+      value: string
+    }
   }
 }
 export {}

@@ -5,17 +5,35 @@
   "scripts": {
     "build": "next build",
     "dev": "sst dev next dev",
+    "dev-turbo": "sst dev 'next dev turbo'",
     "lint": "next lint",
     "start": "next start"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.24",
+    "@langchain/community": "^0.2.3",
+    "@langchain/langgraph": "^0.0.23",
+    "@langchain/openai": "^0.1.3",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "@upstash/redis": "^1.31.6",
     "ai": "^3.1.30",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.394.0",
+    "nanoid": "^5.0.7",
     "next": "14.2.3",
     "open-next": "^3.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
+    "react-textarea-autosize": "^8.5.3",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
     "sst": "ion",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -27,5 +45,8 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "resolutions": {
+    "@langchain/core": "^0.2.3"
   }
 }

@@ -1,10 +1,12 @@
-import Chat from "./components/chat";
+import SlowComponent from "@/components/slow";
+import { Suspense } from "react";
 
 export default function Home() {
-  console.log("log from home page");
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Chat />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SlowComponent />
+      </Suspense>
     </main>
   );
 }
