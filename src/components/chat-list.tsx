@@ -11,6 +11,12 @@ export default function ChatList({ messages }: ChatList) {
     return null;
   }
 
+  // filter messages that have spinner, display and attachments as null at the same time
+
+  messages = messages.filter((message) => {
+    return message.spinner || message.display || message.attachments;
+  });
+
   return (
     <div className="relative mx-auto max-w-2xl px-4">
       {messages.map((message, index) => (
