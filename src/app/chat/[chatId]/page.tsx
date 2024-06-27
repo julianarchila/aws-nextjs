@@ -3,6 +3,7 @@ import { AI } from "@/lib/chat/actions";
 import { redirect } from "next/navigation";
 
 import { Chat } from "@/components/chat/Chat";
+export const maxDuration = 60;
 
 export interface ChatPageProps {
   params: {
