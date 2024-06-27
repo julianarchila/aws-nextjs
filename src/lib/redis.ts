@@ -1,6 +1,8 @@
 import { Redis } from "@upstash/redis";
 
+import { Resource } from "sst";
+
 export const redis = new Redis({
-  url: process.env.REDIS_URL,
-  token: process.env.REDIS_KEY,
+  url: Resource.RedisUrl.value,
+  token: Resource.RedisKey.value,
 });

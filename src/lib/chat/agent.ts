@@ -1,9 +1,10 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { toolNode, tools } from "./tools";
 import { nanoid } from "../utils";
+import { Resource } from "sst";
 
 /* const model = new ChatOpenAI({
-  apiKey: process.env.OpenaiApiKey,
+  apiKey: Resource.OpenaiApiKey.value,
   temperature: 0,
   modelName: "llama3-70b-8192",
   configuration: {
@@ -12,7 +13,7 @@ import { nanoid } from "../utils";
 }); */
 
 const model = new ChatOpenAI({
-  apiKey: process.env.OpenaiApiKey,
+  apiKey: Resource.OpenaiApiKey.value,
   model: "gpt-4o",
 });
 

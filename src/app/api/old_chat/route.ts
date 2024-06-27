@@ -1,11 +1,12 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
+import { Resource } from "sst";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
   const model = createOpenAI({
     // baseURL: "https://api.groq.com/openai/v1",
-    apiKey: process.env.OpenaiApiKey,
+    apiKey: Resource.OpenaiApiKey.value,
   });
 
   const result = await streamText({
