@@ -1,30 +1,15 @@
-import { type createStreamableUI } from "ai/rsc";
-import type OpenAI from "openai";
+import type { createStreamableValue, createStreamableUI } from "ai/rsc";
 
 import type { BaseMessage, StoredMessage } from "@langchain/core/messages";
 
-/* type FunctionCall = {
-  role: "function";
-  name: string;
-  arguments?: Record<string, any>;
-  output?: Record<string, any>;
-}; */
-
-// export type Message = OpenAI.Beta.Threads.Message | FunctionCall;
-/* export type ToolOutput =
-OpenAI.Beta.Threads.Runs.RunSubmitToolOutputsParams.ToolOutput; */
 export type Message = BaseMessage;
 
+/** The state of the AI for vercel ai sdk helper */
 export interface AIState {
   chatId: string;
   messages: StoredMessage[];
 }
-
-export interface AgentState {
-  chatId: string;
-  messages: BaseMessage[];
-}
-
+/** The state of the UI for vercel ai sdk helper */
 export type UIState = {
   id: string;
   display: React.ReactNode;
@@ -32,16 +17,24 @@ export type UIState = {
   attachments?: React.ReactNode;
 }[];
 
+// Type helpers for ai sdk
 export type StremableUI = ReturnType<typeof createStreamableUI>;
+export type StremableValue<T> = ReturnType<typeof createStreamableValue<T>>;
 
 type ValueOrUpdater<T> = T | ((current: T) => T);
-type _MutableAIState<AIState> = {
-  get: () => AIState;
-  update: (newState: ValueOrUpdater<AgentState>) => void;
-  done: ((newState: AIState) => void) | (() => void);
+type _MutableAIState<_AIState> = {
+  get: () => _AIState;
+  update: (newState: ValueOrUpdater<_AIState>) => void;
+  done: ((newState: _AIState) => void) | (() => void);
 };
 
-export type MutableAIState = _MutableAIState<AgentState>;
+export type MutableAIState = _MutableAIState<AIState>;
+
+/** The state of the langgraph agent*/
+export interface AgentState {
+  chatId: string;
+  messages: BaseMessage[];
+}
 
 export interface GenerateToolsOptions {
   storeId: number;
@@ -50,6 +43,7 @@ export interface GenerateToolsOptions {
   aiState: MutableAIState;
 }
 
+/** The chat object (this is the same as the redis store) */
 export interface Chat extends Record<string, any> {
   id: string;
   messages: StoredMessage[];

@@ -1,4 +1,3 @@
-// import { OpenAI } from "openai";
 import {
   createAI,
   createStreamableUI,
@@ -9,11 +8,7 @@ import {
 import { BotMessage, SpinnerMessage, UserMessage } from "@/components/message";
 import type { AIState, UIState } from "./types";
 import { nanoid } from "@/lib/utils";
-
-import { graph } from "./agent";
-import { ChatGenerationChunk } from "@langchain/core/outputs";
-import { AIMessageChunk, HumanMessage } from "@langchain/core/messages";
-import { getConvertedChat } from "@/controllers/chat";
+import { handleSubmitUserMessage } from "./handlers";
 
 // eslint-disable-next-line
 async function submitUserMessage(content: string): Promise<UIState[number]> {
@@ -23,73 +18,36 @@ async function submitUserMessage(content: string): Promise<UIState[number]> {
   const aiState = getMutableAIState<typeof AI>();
   console.log("chatId", aiState.get().chatId);
 
-  // Configuration object for langgraph
-  const config = {
-    configurable: {
-      id: aiState.get().chatId,
-    },
-  };
-
   // Stream objects
   const textStream = createStreamableValue("");
   const spinnerStream = createStreamableUI(<SpinnerMessage />);
   const messageStream = createStreamableUI(null);
   const uiStream = createStreamableUI();
 
-  // this function could be defined separately and pass the global values as arguments (textStream, spinnerStream, messageStream, uiStream, etc)
-  void (async () => {
-    // Start spinner
-    spinnerStream.update(<SpinnerMessage />);
-    let started = false;
+  handleSubmitUserMessage({
+    content,
+    aiState,
+    textStream,
+    spinnerStream,
+    messageStream,
+    uiStream,
+  })
+    .then(() => {
+      // Close streams
+      spinnerStream.done();
+      messageStream.done();
+      textStream.done();
+      uiStream.done();
 
-    // get chat history from a redis store
-    const saved_chat = await getConvertedChat(config.configurable.id);
-
-    // If no saved chat, start with a new chat (empty array)
-    const messages = saved_chat?.messages ?? [];
-
-    // append the user message to the list
-    const inputs = {
-      messages: [...messages, new HumanMessage(content)],
-    };
-
-    // run the graph and iterate over the stream
-    for await (const event of await graph.streamEvents(inputs, {
-      ...config,
-      streamMode: "values",
-      version: "v1",
-    })) {
-      if (event.event === "on_llm_start") {
-        // console.log("on_llm_start");
-      }
-
-      if (event.event === "on_llm_stream") {
-        if (!started) {
-          started = true;
-          spinnerStream.update(null);
-          messageStream.update(<BotMessage content={textStream.value} />);
-        }
-
-        let chunk: ChatGenerationChunk = event.data?.chunk;
-        let msg = chunk.message as AIMessageChunk;
-        if (msg.tool_call_chunks && msg.tool_call_chunks.length > 0) {
-          // console.log(msg.tool_call_chunks);
-        } else {
-          if (typeof msg.content == "string") {
-            textStream.update(msg.content);
-          }
-        }
-      }
-    }
-
-    // Close streams
-    spinnerStream.done();
-    messageStream.done();
-    textStream.done();
-    uiStream.done();
-
-    aiState.done(aiState.get());
-  })();
+      aiState.done(aiState.get());
+    })
+    .catch((error) => {
+      console.error(error);
+      spinnerStream.done();
+      messageStream.done();
+      textStream.done();
+      uiStream.done();
+    });
 
   return {
     id: nanoid(),
