@@ -51,21 +51,25 @@ export async function handleSubmitUserMessage(params: SubmitUserMessageParams) {
   for await (const event of await graph.streamEvents(inputs, {
     ...config,
     streamMode: "values",
-    version: "v1",
+    version: "v2",
   })) {
+    // console.log({ event });
     if (event.event === "on_llm_start") {
       // console.log("on_llm_start");
     }
 
-    if (event.event === "on_llm_stream") {
+    if (
+      event.event === "on_llm_stream" ||
+      event.event === "on_chat_model_stream"
+    ) {
       if (!started) {
         started = true;
         spinnerStream.update(null);
         messageStream.update(<BotMessage content={textStream.value} />);
       }
 
-      let chunk: ChatGenerationChunk = event.data?.chunk;
-      let msg = chunk.message as AIMessageChunk;
+      let chunk = event.data?.chunk;
+      let msg = chunk as AIMessageChunk;
       if (msg.tool_call_chunks && msg.tool_call_chunks.length > 0) {
         // console.log(msg.tool_call_chunks);
       } else {

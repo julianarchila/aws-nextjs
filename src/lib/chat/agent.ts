@@ -59,10 +59,10 @@ const shouldContinue = (state: AgentState) => {
 const callModel = async (state: AgentState, config?: RunnableConfig) => {
   const messages = state.messages;
   const response = await boundModel.invoke(messages, config);
-  /* console.log("response", {
+  console.log({
     ...response,
     additional_kwargs: { ...response.additional_kwargs },
-  }); */
+  });
   // We return an object, because this will get added to the existing list
   return { messages: [response] };
 };
