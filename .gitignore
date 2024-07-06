@@ -40,3 +40,8 @@ next-env.d.ts
 
 # open-next
 .open-next
+
+
+# envs files
+.env*
+.env/*
