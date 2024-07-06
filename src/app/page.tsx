@@ -9,7 +9,7 @@ export default function Home() {
         href="/chat"
         className="text-2xl font-bold text-blue-500 hover:text-blue-700"
       >
-        Chat
+        Chat here
       </Link>
     </main>
   );
