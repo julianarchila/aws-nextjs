@@ -4,10 +4,9 @@ export default $config({
   console: {
     autodeploy: {
       target(event) {
-        if (event.type === "pushed" && event.branch === "main") {
+        if (event.type === "branch" && event.branch === "main") {
           return {
             stage: "production",
-            runner: { engine: "codebuild", compute: "large" },
           };
         }
       },
